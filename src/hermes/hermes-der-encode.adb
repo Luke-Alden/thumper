@@ -128,10 +128,21 @@ package body Hermes.DER.Encode is
 
    
    function Put_Integer_Value(Value : Integer) return Hermes.Octet_Array is
-      Integer_Octet_Array : Hermes.Octet_Array(1 .. 0);
-   begin   
-      raise Program_Error with "Hermes.DER.Encode.Put_Integer_Value not implemented";
+      Integer_Octet_Array : Hermes.Octet_Array(1 .. 6);
+      
+   begin
+      Integer_Octet_Array(1) := Make_Leading_Identifier(Class_Universal, Primitive, Tag_Integer);
+      if Value <= 16#7f# then
+         Integer_Octet_Array(2) := Put_Length_Value(1);
+      elsif <= 16#7fff# then
+         
+      elsif <= 16#7fffff# then
+         
+      else
+         
+      end if;
       return Integer_Octet_Array;
+      
    end Put_Integer_Value;
    
    
