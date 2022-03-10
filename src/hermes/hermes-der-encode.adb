@@ -129,19 +129,36 @@ package body Hermes.DER.Encode is
    
    function Put_Integer_Value(Value : Integer) return Hermes.Octet_Array is
       Integer_Octet_Array : Hermes.Octet_Array(1 .. 6);
-      
+      Temp : Integer;
+      Tempp: Integer;
    begin
       Integer_Octet_Array(1) := Make_Leading_Identifier(Class_Universal, Primitive, Tag_Integer);
       if Value <= 16#7f# then
-         Integer_Octet_Array(2) := Put_Length_Value(1);
-      elsif <= 16#7fff# then
-         
-      elsif <= 16#7fffff# then
-         
+         Integer_Octet_Array(2) := Put_Length_Value(1)(1);
+         Integer_Octet_Array(3) := Octet(Value);
+         return Integer_Octet_Array(1..3);
+      elsif Value <= 16#7fff# then
+         Integer_Octet_Array(2) := Put_Length_Value(2)(1);
+         Integer_Octet_Array(3) := Octet(Value / 256);
+         Integer_Octet_Array(4) := Octet(Value rem 256);
+         return Integer_Octet_Array(1..4);
+      elsif Value <= 16#7fffff# then
+         Integer_Octet_Array(2) := Put_Length_Value(3)(1);
+         Integer_Octet_Array(5) := Octet(Value rem 256);
+         Temp := Value / 256;
+         Integer_Octet_Array(4) := Octet(Temp rem 256);
+         Integer_Octet_Array(3) := Octet(Temp / 256);
+         return Integer_Octet_Array(1..5);
       else
-         
+         Integer_Octet_Array(2) := Put_Length_Value(4)(1);
+         Integer_Octet_Array(6) := Octet(Value rem 256);
+         Temp := Value / 256;
+         Integer_Octet_Array(5) := Octet(Temp rem 256);
+         Tempp:= Temp / 256;
+         Integer_Octet_Array(4) := Octet(Tempp rem 256);
+         Integer_Octet_Array(3) := Octet(Tempp / 256);
+         return Integer_Octet_Array(1..6);
       end if;
-      return Integer_Octet_Array;
       
    end Put_Integer_Value;
    
