@@ -62,6 +62,7 @@ begin
    -- TODO: Come up with a good way to cleanly shut the server down.
    Server_SPARK_Boundary.Service_Clients;
 
+
 exception
    when Ex : Network.Socket.Network_Error =>
       Ada.Text_IO.Put_Line("*** Unable to initialize network: " & Exception_Message(Ex));
